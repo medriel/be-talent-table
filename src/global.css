@@ -1,0 +1,31 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+:root {
+  --color-blue-primary: #0500FF;
+  --color-blue-secondary: #EDEFFB;
+  --color-white: #FFFFFF;
+  --color-black: #1C1C1C;
+  --color-gray-20: #9E9E9E;
+  --color-gray-10: #DFDFDF;
+  --color-gray-5: #F5F5F5;
+  --color-gray: #F0F0F0;
+
+  --font-primary: 'Roboto', sans-serif;
+}
