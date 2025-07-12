@@ -4,7 +4,7 @@ import "./styles.css";
 
 const Home = () => {
   return (
-    <div className="header-wrapper">
+    <div className="home-wrapper">
       <Header />
       <EmployeeTable />
     </div>

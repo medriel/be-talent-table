@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { api } from "../../service/api";
 import type { Employee } from "../../types/Employee";
-import SearchContainer from "../SearchContainer";
+import SearchInput from "../SearchInput";
 import "./styles.css";
 
 
@@ -9,6 +9,24 @@ const EmployeeTable = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredEmployees = useMemo(() => {
+    if (!searchTerm.trim()) return employees;
+
+    const term = searchTerm.toLowerCase();
+    const termNumbersOnly = term.replace(/\D/g, '');
+
+    return employees.filter((emp) => {
+      const nameMatch = emp.name?.toLowerCase().includes(term);
+      const jobMatch = emp.job?.toLowerCase().includes(term);
+      const phoneMatch =
+        termNumbersOnly.length > 0 &&
+        emp.phone?.replace(/\D/g, '').includes(termNumbersOnly);
+
+      return nameMatch || jobMatch || phoneMatch;
+    });
+  }, [employees, searchTerm]);
 
 
   useEffect(() => {
@@ -62,7 +80,10 @@ const EmployeeTable = () => {
 
   return (
     <>
-      <SearchContainer />
+      <div className="table-header">
+        <h1>Funcionários</h1>
+        <SearchInput onSearch={setSearchTerm} />
+      </div>
 
       <div className="table-wrapper">
         <div className="table-scroll">
@@ -78,7 +99,7 @@ const EmployeeTable = () => {
           </div>
 
           <div className="table-body">
-            {employees.map((emp, index) => (
+            {filteredEmployees.map((emp, index) => (
               <div className="row" key={index}>
                 <div className="cell">
                   <div className="photo-placeholder">

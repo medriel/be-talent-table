@@ -1,4 +1,7 @@
-.header-wrapper {
+.home-wrapper {
+  min-height: 100%;
   background-color: var(--color-gray);
   padding-bottom: 44px;
+  display: flex;
+  flex-direction: column;
 }
