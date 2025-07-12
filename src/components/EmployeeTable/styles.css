@@ -1,0 +1,88 @@
+.table-wrapper {
+  margin: 44px 32px 0px 32px;
+  font-family: var(--font-primary);
+  box-sizing: border-box;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.table-head {
+  background-color: var(--color-blue-primary);
+  color: var(--color-white);
+  font-weight: 600;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  overflow: hidden;
+}
+
+.table-head .row {
+  display: flex;
+  min-width: 700px;
+  padding-inline: 32px;
+}
+
+
+.table-body {
+  min-width: 700px;
+  border: 1px solid var(--color-gray-10);
+  border-top: none;
+  background-color: var(--color-white);
+}
+
+.table-body .row {
+  display: flex;
+  border-bottom: 1px solid var(--color-gray-10);
+  padding-inline: 32px;
+}
+
+.cell {
+  flex: 1;
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.cell:first-child {
+  flex: 0 0 60px;
+}
+
+.photo-placeholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.photo-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.no-photo {
+  width: 40px;
+  height: 40px;
+  background-color: var(--color-gray-10);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+
+  .table-head,
+  .table-body {
+    min-width: 700px;
+  }
+
+  .cell {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+  }
+}
