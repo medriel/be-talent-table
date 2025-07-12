@@ -56,26 +56,70 @@ const EmployeeTable = () => {
   if (employees.length === 0) {
     return <p className="status-message">Nenhum colaborador encontrado.</p>;
   }
-
   function EmployeePhoto({ name, image }: { name: string; image: string }) {
-    const [hasError, setHasError] = useState(false);
+    const [hasImage, setHasImage] = useState(false);
 
     const getInitials = (name: string) => {
-      const [first, second] = name.split(' ');
-      return (first?.[0] || '') + (second?.[0] || '');
+      const [first, second] = name.split(" ");
+      return (first?.[0] || "") + (second?.[0] || "");
     };
 
-    if (hasError || !image) {
-      return <div className="avatar-fallback">{getInitials(name).toUpperCase()}</div>;
+    useEffect(() => {
+      if (!image || image.trim() === "") {
+        setHasImage(false);
+        return;
+      }
+
+      const img = new Image();
+      img.src = image;
+      img.onload = () => setHasImage(true);
+      img.onerror = () => setHasImage(false);
+    }, [image]);
+
+    if (!hasImage) {
+      return (
+        <div className="avatar-fallback">
+          {getInitials(name).toUpperCase()}
+        </div>
+      );
     }
 
-    return (
-      <img
-        src={image}
-        alt={name}
-        onError={() => setHasError(true)}
-      />
-    );
+    return <img src={image} alt={name} />;
+  }
+
+
+  function formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "-";
+    return date.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  }
+
+  function formatPhone(phone: string): string {
+    if (!phone) return "-";
+
+    let number = phone.startsWith("55") ? phone.slice(2) : phone;
+
+    number = number.replace(/\D/g, "");
+
+    if (number.length === 11) {
+      const ddd = number.slice(0, 2);
+      const part1 = number.slice(2, 7);
+      const part2 = number.slice(7);
+      return `(${ddd}) ${part1}-${part2}`;
+    }
+
+    if (number.length === 10) {
+      const ddd = number.slice(0, 2);
+      const part1 = number.slice(2, 6);
+      const part2 = number.slice(6);
+      return `(${ddd}) ${part1}-${part2}`;
+    }
+
+    return number;
   }
 
   return (
@@ -108,8 +152,9 @@ const EmployeeTable = () => {
                 </div>
                 <div className="cell">{emp.name}</div>
                 <div className="cell">{emp.job}</div>
-                <div className="cell">{emp.admission_date}</div>
-                <div className="cell">{emp.phone}</div>
+                <div className="cell">{formatDate(emp.admission_date)}</div>
+                <div className="cell">{formatPhone(emp.phone)}</div>
+
               </div>
             ))}
           </div>
