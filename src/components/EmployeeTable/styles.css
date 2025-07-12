@@ -75,19 +75,6 @@
   object-fit: cover;
 }
 
-.avatar-fallback {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: #ccc;
-  color: #333;
-  font-weight: 600;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 @media (max-width: 600px) {
 
   .table-head,
