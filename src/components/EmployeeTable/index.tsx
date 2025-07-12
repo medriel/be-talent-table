@@ -1,20 +1,65 @@
+import { useEffect, useState } from "react";
+import { api } from "../../service/api";
+import type { Employee } from "../../types/Employee";
 import SearchContainer from "../SearchContainer";
 import "./styles.css";
 
-const employees = [
-  { name: "Giovana L. Arruda", role: "Front-end", photo: "", phone: "+55 (55) 55555-555", admission: "00/00/0000" },
-  { name: "Vanessa Machado", role: "Front-end", photo: "", phone: "+55 (55) 55555-555", admission: "00/00/0000" },
-  { name: "Juliana Borba", role: "Front-end", photo: "", phone: "+55 (55) 55555-555", admission: "00/00/0000" },
-  { name: "Josiane Dias", role: "Front-end", photo: "", phone: "+55 (55) 55555-555", admission: "00/00/0000" },
-  { name: "Reginaldo Felipe", role: "Front-end", photo: "", phone: "+55 (55) 55555-555", admission: "00/00/0000" },
-  { name: "Grabriel D.", role: "Front-end", photo: "", phone: "+55 (55) 55555-555", admission: "00/00/0000" },
-  { name: "Silvio de Carvalho", role: "Front-end", photo: "", phone: "+55 (55) 55555-555", admission: "00/00/0000" },
-  { name: "Ormar A. Amaral", role: "Front-end", photo: "", phone: "+55 (55) 55555-555", admission: "00/00/0000" },
-  { name: "João Pedro Farias", role: "Front-end", photo: "", phone: "+55 (55) 55555-555", admission: "00/00/0000" },
-  { name: "Caroline Rocha da Silva", role: "Front-end", photo: "", phone: "+55 (55) 55555-555", admission: "00/00/0000" },
-];
 
 const EmployeeTable = () => {
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await api.get<Employee[]>('/employees');
+        setEmployees(response.data);
+      } catch (err) {
+        console.error(err)
+        setError('Erro ao carregar colaboradores.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
+
+  if (loading) {
+    return <p className="status-message">Carregando...</p>;
+  }
+
+  if (error) {
+    return <p className="status-message">{error}</p>;
+  }
+
+  if (employees.length === 0) {
+    return <p className="status-message">Nenhum colaborador encontrado.</p>;
+  }
+
+  function EmployeePhoto({ name, image }: { name: string; image: string }) {
+    const [hasError, setHasError] = useState(false);
+
+    const getInitials = (name: string) => {
+      const [first, second] = name.split(' ');
+      return (first?.[0] || '') + (second?.[0] || '');
+    };
+
+    if (hasError || !image) {
+      return <div className="avatar-fallback">{getInitials(name).toUpperCase()}</div>;
+    }
+
+    return (
+      <img
+        src={image}
+        alt={name}
+        onError={() => setHasError(true)}
+      />
+    );
+  }
+
   return (
     <>
       <SearchContainer />
@@ -37,16 +82,12 @@ const EmployeeTable = () => {
               <div className="row" key={index}>
                 <div className="cell">
                   <div className="photo-placeholder">
-                    {emp.photo ? (
-                      <img src={emp.photo} alt={emp.name} />
-                    ) : (
-                      <div className="no-photo">Foto</div>
-                    )}
+                    <EmployeePhoto name={emp.name} image={emp.image} />
                   </div>
                 </div>
                 <div className="cell">{emp.name}</div>
-                <div className="cell">{emp.role}</div>
-                <div className="cell">{emp.admission}</div>
+                <div className="cell">{emp.job}</div>
+                <div className="cell">{emp.admission_date}</div>
                 <div className="cell">{emp.phone}</div>
               </div>
             ))}
